@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Bingo - Reconnect Ready</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+    <div id="loginOverlay" class="login-overlay" style="display:none;">
+        <div class="login-box panel-card">
+            <h1>ANIME BINGO</h1>
+            <p>กรุณาระบุชื่อเพื่อร่วมสนุก</p>
+            <input type="text" id="username" placeholder="ชื่อเล่นของคุณ...">
+            <button onclick="enterGame()">เข้าร่วมเกม</button>
+        </div>
+    </div>
+
+    <div class="app-shell">
+        <main class="game-area">
+            <section class="player-status-container" id="players"></section>
+            <div id="turnIndicator" class="turn-indicator">รอเชื่อมต่อ...</div>
+
+            <div class="bingo-container" id="bingoGrid"></div>
+
+            <div class="action-row">
+                <button id="skip" onclick="socket.emit('skip_turn')" disabled>ข้ามตานี้</button>
+                <button id="confirm" onclick="showConfirmModal()" disabled>ยืนยันช่องนี้</button>
+            </div>
+        </main>
+
+        <aside class="search-sidebar">
+            <div class="panel-card search-panel">
+                <h2>ค้นหาอนิเมะ &amp; ตัวละคร</h2>
+                <input id="search" class="search-input" placeholder="?? พิมพ์ชื่ออนิเมะ..." oninput="onSearch()">
+
+                <div id="animeResultsLabel" class="result-label" style="display:none;">
+                    <span>?? ผลการค้นหาอนิเมะ</span>
+                    <span id="animeCount"></span>
+                </div>
+                <div id="animeResults" class="scroll-container"></div>
+
+                <div id="charResultsLabel" class="result-label" style="display:none;">
+                    <span>?? ตัวละครในเรื่อง</span>
+                    <span id="charCount"></span>
+                </div>
+                <div id="charResults" class="scroll-container"></div>
+            </div>
+        </aside>
+    </div>
+
+    <div id="confirmModal" class="modal">
+        <div class="modal-box panel-card">
+            <h2>?? ยืนยันข้อมูล</h2>
+            <div id="cImg"></div>
+            <p id="cText"></p>
+            <div class="action-row">
+                <button onclick="submitMove()" style="background:var(--success);">ยืนยัน</button>
+                <button onclick="closeConfirm()" style="background:#444;">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
+

@@ -1,0 +1,7 @@
+flask
+flask-socketio
+python-socketio
+engineio
+eventlet>=0.33.0
+gunicorn
+requests

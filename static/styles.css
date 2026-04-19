@@ -1,0 +1,435 @@
+:root {
+    --bg: #0b0b18;
+    --card: #16162b;
+    --panel: rgba(255,255,255,0.04);
+    --p: #a55eea;
+    --accent: #3498db;
+    --success: #2ecc71;
+    --danger: #ff4757;
+    --text: #f4f4ff;
+    --muted: #999;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    min-height: 100%;
+    font-family: 'Kanit', sans-serif;
+    background: radial-gradient(circle at top, rgba(165,94,234,0.12), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(52,152,219,0.12), transparent 28%),
+                var(--bg);
+    color: var(--text);
+}
+
+body {
+    padding: 20px;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+.app-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 24px;
+    width: min(100%, 1320px);
+    margin: 0 auto;
+    align-items: start;
+}
+
+.game-area {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.search-sidebar {
+    position: sticky;
+    top: 20px;
+    align-self: start;
+}
+
+.panel-card,
+.modal-box,
+.login-box {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 24px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.35);
+}
+
+.player-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    border-radius: 48px;
+    background: rgba(255,255,255,0.05);
+    min-width: 180px;
+    border: 2px solid transparent;
+    transition: transform 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.player-card.active {
+    border-color: currentColor;
+    transform: translateY(-1px);
+}
+
+.player-card.disconnected {
+    opacity: 0.5;
+    background: rgba(255,255,255,0.02);
+}
+
+.player-card.disconnected .p-dot {
+    background: #666 !important;
+}
+
+.player-card.disconnected .player-name {
+    color: #999;
+}
+
+.player-card.skull .p-dot::before {
+    content: '💀';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    color: #fff;
+}
+
+.p-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: 0 0 14px rgba(0,0,0,0.35);
+    position: relative;
+}
+
+.player-name {
+    min-width: 120px;
+    font-weight: 700;
+}
+
+.hearts {
+    display: flex;
+    gap: 2px;
+}
+
+.turn-indicator {
+    padding: 18px 22px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 1.1rem;
+}
+
+.bingo-container {
+    display: grid;
+    grid-template-columns: 100px repeat(5, minmax(0, 110px));
+    gap: 10px;
+    padding: 16px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+}
+
+.cell {
+    width: 100%;
+    min-height: 110px;
+    background: rgba(255,255,255,0.04);
+    border: 2px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    transition: border-color 0.25s ease, transform 0.2s ease;
+}
+
+.cell:hover {
+    transform: translateY(-1px);
+}
+
+.cell.locked {
+    cursor: default;
+}
+
+.cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.h-col,
+.h-row {
+    padding: 10px 12px;
+    color: var(--text);
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 56px;
+}
+
+.h-col {
+    background: #2b2b4c;
+}
+
+.h-row {
+    background: #d33f3f;
+}
+
+.drop-zone {
+    cursor: pointer;
+    border-style: dashed;
+    background: rgba(255,255,255,0.02);
+}
+
+.drop-zone:hover {
+    background: rgba(165,94,234,0.12);
+    border-color: var(--p);
+}
+
+.vote-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: var(--danger);
+    border: none;
+    color: white;
+    border-radius: 10px;
+    font-size: 11px;
+    padding: 6px 10px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.cell.locked:hover .vote-btn {
+    opacity: 1;
+}
+
+.dispute-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--danger);
+    font-size: 10px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.action-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.action-row button {
+    border: none;
+    border-radius: 16px;
+    padding: 14px 30px;
+    color: white;
+    cursor: pointer;
+    font-weight: 700;
+    min-width: 170px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.action-row button:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.action-row button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.search-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 22px;
+}
+
+.search-panel h2 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 18px 20px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    color: var(--text);
+    outline: none;
+    font-size: 0.98rem;
+}
+
+.search-input:focus {
+    border-color: var(--p);
+    box-shadow: 0 0 18px rgba(165,94,234,0.18);
+}
+
+.search-section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.result-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--muted);
+    font-weight: 700;
+}
+
+.scroll-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 14px;
+    max-height: 420px;
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+.scroll-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background: rgba(165,94,234,0.65);
+    border-radius: 999px;
+}
+
+.item-card {
+    background: rgba(0,0,0,0.18);
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    min-height: 170px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.item-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(52,152,219,0.5);
+}
+
+.item-card img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+}
+
+.item-name {
+    padding: 12px 10px;
+    font-size: 0.86rem;
+    line-height: 1.3;
+    min-height: 50px;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    background: rgba(0,0,0,0.78);
+    padding: 20px;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-box {
+    width: min(100%, 420px);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 32px;
+}
+
+.login-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(11,11,24,0.96);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.login-box {
+    width: min(100%, 420px);
+    padding: 36px;
+}
+
+.login-box h1 {
+    margin: 0 0 10px;
+    color: var(--p);
+}
+
+.login-box p {
+    margin: 0 0 24px;
+    color: var(--muted);
+}
+
+.login-box input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text);
+    padding: 16px;
+    border-radius: 16px;
+    margin-bottom: 22px;
+}
+
+.login-box button {
+    width: 100%;
+    background: var(--p);
+}
+
+@media (max-width: 1060px) {
+    .app-shell {
+        grid-template-columns: 1fr;
+    }
+    .search-sidebar {
+        position: static;
+    }
+}
+
+@media (max-width: 720px) {
+    .bingo-container {
+        grid-template-columns: 80px repeat(5, minmax(0, 80px));
+        gap: 8px;
+    }
+    .cell {
+        min-height: 90px;
+    }
+}
