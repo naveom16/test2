@@ -1,6 +1,3 @@
-import eventlet
-eventlet.monkey_patch()
-
 import logging
 import random
 from flask import Flask, render_template, request
@@ -16,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'anime_bingo_v7_final'
-socketio = SocketIO(app, cors_allowed_origins='*', async_mode='eventlet')
+socketio = SocketIO(app, cors_allowed_origins='*', async_mode='threading')
 
 PLAYER_COLORS = [
     '#FF4757', '#2ED573', '#1E90FF', '#ECCC68', '#A55EEA', '#FFA502', '#70A1FF', '#7BED9F'
